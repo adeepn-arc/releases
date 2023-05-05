@@ -1,0 +1,53 @@
+name: JH Autorebase
+
+on:
+  schedule:
+    - cron:  '30 2 * * *'
+  workflow_call:
+    secrets:
+      token:
+        required: true
+  workflow_dispatch:
+
+jobs:
+  doupdate:
+    name: Sync repository with upstream
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'adeepn-arc' }}
+    permissions:
+      contents: write
+      packages: write
+
+    strategy:
+      matrix:
+        branch: [main]
+    steps:
+      - name: Clean git
+        run: |
+          mkdir -p rebase
+          cd rebase
+          git remote remove upstream || true
+      - name: Checkout repository (${{ matrix.branch }})
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          path: rebase
+          ref: ${{ matrix.branch }}
+          token: ${{ secrets.token == null && secrets.GITHUB_TOKEN || secrets.token }}
+
+      - name: Rebase repository (${{ matrix.branch }})
+        run: |
+          cd rebase
+          UPSTREAM=https://github.com/actions-runner-controller/releases.git
+          git remote add upstream $UPSTREAM  || true
+          git fetch upstream ${{ matrix.branch }}
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name  "GitHub Actions"
+          git rebase upstream/${{ matrix.branch }}
+          if [ "$(git status | grep diverged)" ]; then
+            git push origin $(git branch --show-current) --force-with-lease;
+          else
+            git push origin $(git branch --show-current)
+          fi;
+          git remote remove upstream || true
+
