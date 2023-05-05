@@ -33,8 +33,8 @@ on:
 
 env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-  TARGET_ORG: actions-runner-controller
-  TARGET_REPO: actions-runner-controller
+  TARGET_ORG: adeepn-arc
+  TARGET_REPO: releases
 
 concurrency:
   group: ${{ github.workflow }}
@@ -91,7 +91,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          repository: actions/actions-runner-controller
+          repository: adeepn-arc/actions-runner-controller
           path: arc/
           ref: ${{ inputs.sha }}
 
