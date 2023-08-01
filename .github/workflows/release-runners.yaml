@@ -6,15 +6,15 @@ on:
       runner_version:
         description: 'Runner Version'
         required: true
-        default: '2.300.2'
+        default: '2.307.1'
       docker_version:
         description: 'Docker Version'
         required: false
-        default: '20.10.12'
+        default: '20.10.23'
       runner_container_hooks_version:
         description: 'Runner Container Hooks Version'
         required: true
-        default: '0.2.0'
+        default: '0.3.2'
       sha:
         # If the sha is not provided, we'll default to the commit HEAD is pointing to
         description: 'Commit Used To Build The Images'
@@ -24,7 +24,7 @@ on:
         description: 'Push to registries'
         required: true
         type: boolean
-        default: false
+        default: true
       troubleshoot:
         description: 'Troubleshoot'
         required: false
